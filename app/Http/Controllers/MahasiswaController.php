@@ -143,9 +143,20 @@ class MahasiswaController extends Controller
         ]);
 
         $mataKuliahName = $request->input('mata_kuliah');
-        $mataKuliahId = MataKuliah::where('nama_mk', $mataKuliahName)->pluck('id');
+        $mataKuliah = MataKuliah::where('nama_mk', $mataKuliahName)->first();
 
-        $mahasiswa->mata_kuliah()->syncWithoutDetaching($mataKuliahId);
+        if(!$mataKuliah) {
+            return redirect()->back()->with('error', 'Mata Kuliah tidak ditemukan');
+        }
+
+        $currentTotalSks = $mahasiswa->mata_kuliah->sum('sks');
+        $newTotalSks = $currentTotalSks + $mataKuliah->sks;
+
+        if($newTotalSks > $mahasiswa->max_sks) {
+            return redirect()->back()->with('error', "Gagal menambahkan mata kuliah. Total SKS ($newTotalSks) melebihi batas maksimum ($mahasiswa->max_sks).");
+        }
+
+        $mahasiswa->mata_kuliah()->syncWithoutDetaching($mataKuliah->id);
 
         return redirect()->back()->with('success', 'Mata Kuliah Berhasil Ditambahkan');
     }
