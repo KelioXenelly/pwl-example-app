@@ -7,6 +7,7 @@
     <title>Form Mahasiswa</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         table td {
             padding-block: 0.5rem;
@@ -90,6 +91,27 @@
                     <button type="submit" class="btn btn-primary">Save</button>
                 </div>
             </form>
+            @if (session('success'))
+                <script>
+                    Swal.fire({
+                        title: "Berhasil Memperbarui Mahasiswa!",
+                        text: "{{ session('success')}}",
+                        icon: "success"
+                    });
+                </script>
+            @endif
+
+            @if ($errors->any())
+                <script>
+                    Swal.fire({
+                        title: "Gagal Memperbarui Mahasiswa!",
+                        html: `{!! implode('<br>', $errors->all()) !!}`,
+                        text: "Terdapat kesalahan pada inputan.",
+                        icon: "error",
+                        confirmButtonText: "Perbaiki",
+                    });
+                </script>
+            @endif
         </div>
         <div class="col-8 border-start border-4">
             <h2>Sync Mahasiswa</h2>
@@ -103,6 +125,27 @@
                 </select>
                 <Button type="submit" class="btn btn-success">Sync</Button>
             </form>
+            @if (session('success'))
+                <script>
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: '{{ session('success') }}',
+                        confirmButtonColor: '#198754'
+                    })
+                </script>
+            @endif
+
+            @if (session('error'))
+                <script>
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal!',
+                        text: '{{ session('error') }}',
+                        confirmButtonColor: '#dc3545'
+                    })
+                </script>
+            @endif
             
             <h2 class="mt-4 fs-5">Tabel Mata Kuliah</h2>
             <table class="table table-light">
@@ -143,28 +186,6 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    @if (session('success'))
-        <script>
-            Swal.fire({
-                title: "Berhasil Memperbarui Mahasiswa!",
-                text: "{{ session('success')}}",
-                icon: "success"
-            });
-        </script>
-    @endif
-
-    @if ($errors->any())
-        <script>
-            Swal.fire({
-                title: "Gagal Memperbarui Mahasiswa!",
-                html: `{!! implode('<br>', $errors->all()) !!}`,
-                text: "Terdapat kesalahan pada inputan.",
-                icon: "error",
-                confirmButtonText: "Perbaiki",
-            });
-        </script>
-    @endif
+    
 </body>
 </html>
