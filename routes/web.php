@@ -1,12 +1,20 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\MataKuliahController;
+use Illuminate\Auth\Middleware\Authenticate;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
+});
+
+Route::withoutMiddleware([Authenticate::class])->group(function () {
+    Auth::routes();
+    ROute::get('/logout', [LoginController::class, 'logout'])->name('logout');
 });
 
 Route::get('/mahasiswa', [MahasiswaController::class, 'index'])->name('mahasiswa.index');
@@ -31,3 +39,5 @@ Route::post('/dosen/store', [DosenController::class, 'store'])->name('dosen.stor
 Route::get('/dosen/edit/{id}', [DosenController::class, 'show'])->name('dosen.show');
 Route::patch('/dosen/edit/{id}', [DosenController::class, 'update'])->name('dosen.update');
 Route::delete('/dosen/delete/{id}', [DosenController::class, 'destroy'])->name('dosen.destroy');
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
